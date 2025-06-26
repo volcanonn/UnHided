@@ -26,6 +26,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+print("hello!L!??????")
 app.add_middleware(EncryptionMiddleware)
 app.add_middleware(UIAccessControlMiddleware)
 
