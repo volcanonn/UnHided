@@ -58,10 +58,12 @@ class EncryptionHandler:
 
 class EncryptionMiddleware(BaseHTTPMiddleware):
     def __init__(self, app):
+        print("hello1")
         super().__init__(app)
         self.encryption_handler = encryption_handler
 
     async def dispatch(self, request: Request, call_next):
+        print("hello2")
         path = request.url.path
         token_marker = "/_token_"
         encrypted_token = None
