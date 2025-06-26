@@ -85,6 +85,7 @@ class EncryptionMiddleware(BaseHTTPMiddleware):
 
                 # Update the raw path as well
                 request.scope["raw_path"] = remaining_path.encode()
+                print("token is in path")
 
             except Exception as e:
                 logging.error(f"Error processing token in path: {str(e)}")
@@ -97,21 +98,26 @@ class EncryptionMiddleware(BaseHTTPMiddleware):
         # Process the token if found (from either source)
         if encrypted_token and self.encryption_handler:
             try:
+                print("token found")
                 client_ip = self.get_client_ip(request)
                 decrypted_data = self.encryption_handler.decrypt_data(encrypted_token, client_ip)
+                print(f"decrypted data {decrypted_data}")
 
                 # Modify request query parameters with decrypted data
                 query_params = dict(request.query_params)
                 if "token" in query_params:
                     query_params.pop("token")  # Remove the encrypted token from query params
+                print("1")
 
                 query_params.update(decrypted_data)  # Add decrypted data to query params
                 query_params["has_encrypted"] = True
+                print("2")
 
                 # Create a new request scope with updated query parameters
                 new_query_string = urlencode(query_params)
                 request.scope["query_string"] = new_query_string.encode()
                 request._query_params = query_params
+                print("3")
 
             except HTTPException as e:
                 return JSONResponse(content={"error": str(e.detail)}, status_code=e.status_code)
