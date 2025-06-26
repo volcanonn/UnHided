@@ -153,6 +153,7 @@ async def generate_urls(request: GenerateMultiUrlRequest):
 
     tasks = [_process_url_item(url_item) for url_item in request.urls]
     encoded_urls = await asyncio.gather(*tasks)
+    print(encoded_urls)
     return {"urls": encoded_urls}
 
 
